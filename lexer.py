@@ -49,7 +49,6 @@ tokens_list = [
     'DOT',
     'TEXT',
     'COMMENT_INLINE',
-    # 'NEWLINE'
     ]
 parser = ox.make_parser([
 
@@ -71,11 +70,12 @@ parser = ox.make_parser([
     ('args : arg COMMA args', lambda a,b,c: [a] + c),
     ('args : arg', lambda x: [x]),
     ('arg : STRING EQUAL value', lambda a,b,c: (a,c)),
-
+    # ('block_text : DOT TEXT', lambda a,b: [b]),
+    # ('comment : COMMENT_INLINE WORD', lambda a,b: [b]),
     ('value : INTEGER', lambda a: int(a)),
     ('value : STRING', lambda a: str(a)),
     ('tag : WORD', lambda a: a)
 ], tokens_list)
 
-ast = parser(tokens)
+# ast = parser(tokens)
 print('AST:', ast)

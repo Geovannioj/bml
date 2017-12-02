@@ -2,5 +2,7 @@ a(attr="ads",attr2=48)
     b()
         c()
             d()
+            . ola
+            // comentario
 e()
 div()
