@@ -1,10 +1,10 @@
 import ox
 import re
-from lexer_rules import LEXER
+from lexer_rules import Lexer
 
 
 whitespace = re.compile(r'^\s*')
-line_lexer = ox.make_lexer(LEXER)
+line_lexer = ox.make_lexer(Lexer.rules)
 
 def my_lexer(src):
     stack = [0]
@@ -36,23 +36,7 @@ f = open("entrada.bml", "r")
 tokens = list(my_lexer(f.read()))
 print('tokens:', tokens)
 
-tokens_list = [
-    'WORD',
-    'INDENT',
-    'DEDENT',
-    'STRING',
-    'OPEN_PAREN',
-    'CLOSE_PAREN',
-    'INTEGER',
-    'EQUAL',
-    'COMMA',
-    'DOT',
-    'TEXT',
-    'COMMENT_INLINE',
-    ]
 parser = ox.make_parser([
-
-
     #Nomes em MAIUSCULO sao os TOKENS definidos e achados no lexer.
     #Precisamos mudar o lexer para ATOMIZAR mais os achados.
     #Deixar de fazer o papel do parser durante o lexer. (Isso simplifica o lexer)
@@ -75,7 +59,7 @@ parser = ox.make_parser([
     ('value : INTEGER', lambda a: int(a)),
     ('value : STRING', lambda a: str(a)),
     ('tag : WORD', lambda a: a)
-], tokens_list)
+], Lexer.token_list)
 
 # ast = parser(tokens)
 print('AST:', ast)
