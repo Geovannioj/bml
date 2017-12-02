@@ -1,6 +1,7 @@
 LEXER  = [
     ('WORD', r'[a-zA-Z]+'),
     ('STRING', r'([a-zA-Z])+\d+'),
+    # ('NEWLINE', r'\n'),
     ('OPEN_PAREN', r'\('),
     ('CLOSE_PAREN', r'\)'),
     # ('PARAMETER', r'[a-z]+=\"\w*\"'),

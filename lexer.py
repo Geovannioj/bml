@@ -9,7 +9,7 @@ line_lexer = ox.make_lexer(LEXER)
 def my_lexer(src):
     stack = [0]
     for line in src.split('\n'):
-        yield ox.Token('NEWLINE',r'\n')
+        # yield ox.Token('NEWLINE',r'\n')
         m = whitespace.match(line).span(0)[1]
         if m > stack[-1]:
             # espacos += 1
@@ -26,7 +26,7 @@ def my_lexer(src):
                 else:
                     contador = 1
             if contador:
-                raise(TypeError)
+                raise TypeError("Sintaxe inválida em: {}".format(line))
         else:
             pass
 
@@ -35,9 +35,6 @@ def my_lexer(src):
 f = open("entrada.bml", "r")
 tokens = list(my_lexer(f.read()))
 print('tokens:', tokens)
-
-
-
 
 tokens_list = [
     'WORD',
@@ -51,7 +48,8 @@ tokens_list = [
     'COMMA',
     'DOT',
     'TEXT',
-    'COMMENT_INLINE'
+    'COMMENT_INLINE',
+    # 'NEWLINE'
     ]
 parser = ox.make_parser([
 
@@ -62,20 +60,20 @@ parser = ox.make_parser([
     #Entretanto, o parser vai ficar maior. (Dica do prof)
 
 
-    ('block : NEWLINE INDENT stms DEDENT', lambda a,b,c,d: c),
-    ('stms : stm', lambda x: [x]),
-    ('stms : stm NEWLINE smts', lambda x, y: [x] + y),
-    ('stm : block', lambda x: x),
+    # ('block : NEWLINE INDENT stms DEDENT', lambda a,b,c,d: c),
+    # ('stms : stm', lambda x: [x]),
+    # ('stms : stm NEWLINE smts', lambda x, y: [x] + y),
+    # ('stm : block', lambda x: x),
     ('stm : expr', lambda x: x),
 
-    ('expr : TAG OPEN_PAREN args CLOSE_PAREN ', lambda a,b,c,d : [a, c]),
+    ('expr : tag OPEN_PAREN args CLOSE_PAREN ', lambda a,b,c,d : [a, c]),
     ('expr : tag', lambda x: x),
     ('args : arg COMMA args', lambda a,b,c: [a] + c),
     ('args : arg', lambda x: [x]),
-    ('arg : STRING value', lambda a,b: (a,b)),
+    ('arg : STRING EQUAL value', lambda a,b,c: (a,c)),
 
-    ('value : EQUAL INTEGER', lambda a,b: int(b)),
-    ('value : EQUAL STRING', lambda a,b: str(b)),
+    ('value : INTEGER', lambda a: int(a)),
+    ('value : STRING', lambda a: str(a)),
     ('tag : WORD', lambda a: a)
 ], tokens_list)
 
