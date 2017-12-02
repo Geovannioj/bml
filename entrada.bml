@@ -1,5 +1,6 @@
-a(attr="ads")
+a(attr="ads",attr2=48)
     b()
         c()
             d()
 e()
+div()

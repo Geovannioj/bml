@@ -36,9 +36,23 @@ f = open("entrada.bml", "r")
 tokens = list(my_lexer(f.read()))
 print('tokens:', tokens)
 
-tag = lambda x: ('tag', x)
-indent = lambda x: ('indent',)
-tokens_list = ['TAG', 'INDENT', 'DEDENT']
+
+
+
+tokens_list = [
+    'WORD',
+    'INDENT',
+    'DEDENT',
+    'STRING',
+    'OPEN_PAREN',
+    'CLOSE_PAREN',
+    'INTEGER',
+    'EQUAL',
+    'COMMA',
+    'DOT',
+    'TEXT',
+    'COMMENT_INLINE'
+    ]
 parser = ox.make_parser([
 
 
@@ -55,17 +69,14 @@ parser = ox.make_parser([
     ('stm : expr', lambda x: x),
 
     ('expr : TAG OPEN_PAREN args CLOSE_PAREN ', lambda a,b,c,d : [a, c]),
-    ('args : arg', lambda x: [x]),
+    ('expr : tag', lambda x: x),
     ('args : arg COMMA args', lambda a,b,c: [a] + c),
-    ('arg : NAME EQUAL value', lambda a,b,c: (a,c)),
+    ('args : arg', lambda x: [x]),
+    ('arg : STRING value', lambda a,b: (a,b)),
 
-    ('value : INTEGER', lambda x: int(x)),
-    ('value : STRING', lambda x: str(x)),
-
-    ('expr : tag attr', lambda x,y:...),
-    ('expr : tag', lambda x: ...),
-    ('attr : attr', lambda x,y: ... ),
-    ('tag : TAG OPEN_PAREN CLOSE_PAREN', lambda x: ...)
+    ('value : EQUAL INTEGER', lambda a,b: int(b)),
+    ('value : EQUAL STRING', lambda a,b: str(b)),
+    ('tag : WORD', lambda a: a)
 ], tokens_list)
 
 ast = parser(tokens)
