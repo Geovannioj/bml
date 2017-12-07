@@ -9,7 +9,7 @@ line_lexer = ox.make_lexer(Lexer.rules)
 def my_lexer(src):
     stack = [0]
     for line in src.split('\n'):
-        # yield ox.Token('NEWLINE',r'\n')
+        # yield ox.Token('NEWLINE',1)
         m = whitespace.match(line).span(0)[1]
         if m > stack[-1]:
             # espacos += 1
@@ -44,22 +44,24 @@ parser = ox.make_parser([
 
 
     # ('block : NEWLINE INDENT stms DEDENT', lambda a,b,c,d: c),
-    # ('stms : stm', lambda x: [x]),
+    # ('stm : block ', lambda x: x),
     # ('stms : stm NEWLINE smts', lambda x, y: [x] + y),
-    # ('stm : block', lambda x: x),
+    # ('stms : stm', lambda x: [x]),
     ('stm : expr', lambda x: x),
+    ('text : DOT value', lambda a,b: b),
 
     ('expr : tag OPEN_PAREN args CLOSE_PAREN ', lambda a,b,c,d : [a, c]),
     ('expr : tag', lambda x: x),
     ('args : arg COMMA args', lambda a,b,c: [a] + c),
     ('args : arg', lambda x: [x]),
     ('arg : STRING EQUAL value', lambda a,b,c: (a,c)),
-    # ('block_text : DOT TEXT', lambda a,b: [b]),
-    # ('comment : COMMENT_INLINE WORD', lambda a,b: [b]),
     ('value : INTEGER', lambda a: int(a)),
     ('value : STRING', lambda a: str(a)),
     ('tag : WORD', lambda a: a)
 ], Lexer.token_list)
 
-# ast = parser(tokens)
+ast = parser(tokens)
 print('AST:', ast)
+
+# if __name__ == '__main__':
+#     ox.parser.main(line_lexer,parser)
